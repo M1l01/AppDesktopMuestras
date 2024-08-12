@@ -336,8 +336,6 @@ lblCantidadMuestras = tk.Label(ventana, text="Cantidad de Muestras", fg="black",
                                font=("Calisto MT", 10, "bold"))
 lblCantidadMuestras.place(x=300, y=220)
 
-
-
 #Combo Camaras - Seleccionar
 cmbCamaras = ttk.Combobox(ventana, values=CamDisp, state="readonly")
 cmbCamaras.current(0)
