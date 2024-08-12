@@ -104,6 +104,10 @@ def registro():
                     btnIniciarCap.config(state="normal")
                     btnRegistrar.config(state="normal")
 
+                    lblInfo.config(text="*Usuario Registrado con Exito",
+                                fg="green")
+                    lblInfo.place(x=150, y=475)
+
                     print(f"Usuario {UserName} Registrado")
             else:
                 lblInfo.config(text="*Edad Incorrecta",
@@ -116,16 +120,25 @@ def registro():
             #print("Cuestionario Completo Incorrectamente")
 
 def VideoCaptura():
-    global video, btnIniciarCap, cmbCamaras, tupCams
+    global video, btnIniciarCap, cmbCamaras, tupCams, lblInfo, btnRegistrar
     caminput = cmbCamaras.get()
     print(caminput)
+
+    lblInfo.config(text="Captura en proceso...",
+                    fg="green")
+    lblInfo.place(x=175, y=475)
+
+    btnRegistrar.config(state="disabled")
+    
     for cam in tupCams:
         print(cam)
         if caminput == cam[1]:
             camidx = cam[0]
     print(f"Camara Escogida {camidx}")
+    
     video = cv2.VideoCapture(camidx)
     print("Camara Iniciada")
+    
     IniciarCamara()
 
 def IniciarCamara():
@@ -136,7 +149,6 @@ def IniciarCamara():
     if not os.path.exists(carpeta):
         os.makedirs(carpeta)
         print(f"Carpeta Creada para {UserName}")
-
 
     if video.isOpened():
         ret, frame = video.read()
@@ -192,7 +204,7 @@ def DetenerCamara():
         
 
 def resetParameters():
-    global InputNombreReg, InputCantFotos, InputEdad, contador, btnIniciarCap, CantMuestras, cmbCantidadMuestras
+    global InputNombreReg, InputCantFotos, InputEdad, contador, btnIniciarCap, CantMuestras, cmbCantidadMuestras, lblInfo
     
     InputCantMuestras = cmbCantidadMuestras.get()
     InputCantMuestras = int(InputCantMuestras)
@@ -200,11 +212,19 @@ def resetParameters():
     #print(f"Cantidad de Muestras Seleccionadas: {InputCantMuestras}")
 
     if CantMuestras == InputCantMuestras:
+        lblInfo.config(text="Toma de muestra Concluida", fg="#030a71")
+        lblInfo.place(x=165,y=475)
         btnIniciarCap.config(state="disabled")
+        btnRegistrar.config(state="normal")
         InputNombreReg.delete(0, END)
         InputCantFotos.delete(0, END)
         InputEdad.delete(0, END)
         CantMuestras = 0
+
+    else:
+        #btnRegistrar.config(state="disabled")
+        lblInfo.config(text="Coloque la otra mano para segunda muestra", fg="#030a71")
+        lblInfo.place(x=115, y=475)
 
     contador = 1
 
@@ -302,7 +322,7 @@ lblInputEdad = tk.Label(ventana, text="Edad" ,fg="black",
 lblInputEdad.place(x=40, y=370)
 
 lblInfo = tk.Label(ventana, text="", fg="black",
-                    font=("Calisto MT", 10))
+                    font=("Calisto MT", 10, "bold"))
 lblInfo.place(x=120, y=475)
 
 lblLinea = tk.Label(ventana, text="", bg="black")
@@ -315,6 +335,8 @@ lblSelectCamara.place(x=100, y=220)
 lblCantidadMuestras = tk.Label(ventana, text="Cantidad de Muestras", fg="black",
                                font=("Calisto MT", 10, "bold"))
 lblCantidadMuestras.place(x=300, y=220)
+
+
 
 #Combo Camaras - Seleccionar
 cmbCamaras = ttk.Combobox(ventana, values=CamDisp, state="readonly")
