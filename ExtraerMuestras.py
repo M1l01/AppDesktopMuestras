@@ -13,7 +13,7 @@ import subprocess
 #------------------------ Funciones ----------------------------
 def imgAjuste(image, brightness=0, contrast=0):
     """
-    Parameters:
+    Parameters:git status
     - image: The input image.
     - brightness: Value to adjust brightness (-255 to 255).
     - contrast: Value to adjust contrast (-127 to 127).
