@@ -157,8 +157,9 @@ def IniciarCamara():
                 frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 
                 gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-                    #Cambio Contraste
-                frame_eq = imgAjuste(gray, brightness=-130, contrast=33)
+                
+                #Cambio Contraste
+                frame_eq = imgAjuste(gray, brightness=-134, contrast=43)
 
                 median_bluerred = cv2.medianBlur(frame_eq, 3)
 
@@ -168,14 +169,20 @@ def IniciarCamara():
                 sharp_kernel = np.array([[0,-1,0],[-1,5,-1],[0,-1,0]])
                 sharpened = cv2.filter2D(enhanced_clahe, -1, sharp_kernel)
 
-                smoothed = cv2.GaussianBlur(sharpened, (3,3), 0)
+                smoothed = cv2.GaussianBlur(sharpened, (7,7), 0)
+
+                contraste = 1
+                contrastedImg = cv2.convertScaleAbs(smoothed, alpha=contraste, beta=0)
+
+                # #Filtro Laplaciano
+                bilateral = cv2.bilateralFilter(contrastedImg, d=20, sigmaColor=2, sigmaSpace=75)
 
                 if contador > 22:
-                    fotoMuestra = smoothed.copy()
+                    fotoMuestra = bilateral.copy()
                     cv2.imwrite(carpeta + f"//Foto_{contador-22}.png", fotoMuestra)
                     
                 #Mostrar imagen en pantalla
-                img = Image.fromarray(smoothed)
+                img = Image.fromarray(bilateral)
                 image = ImageTk.PhotoImage(image=img)
                 lblVideo.configure(image=image)
                 lblVideo.image = image
